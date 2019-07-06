@@ -1,29 +1,31 @@
 <template>
-   <div class="container">
-	   <div class="row">
-		   <table class="table">
-			   <tr>
-				   <td>
-					   <input type=text size=20>
-					   <input type="button" value="검색">
-				   </td>
-			   </tr>
-		   </table>
-		   <table class="table">
-             <tr>
-				 <td>
-					 <table class="table table-hover">
-						 <tr>
-							 <th class="text-center danger"></th>
-						 </tr>
-						 <tr>
-							 <td></td>
-						 </tr>
-					 </table>
-				 </td>
-			 </tr>
-		   </table>
-	   </div>
+    <div id="app">
+		<div class="container">
+			<div class="row">
+				<table class="table">
+					<tr>
+						<td>
+							<input type=text size=20 v-model="fd">
+							<input type="button" value="검색" @click="newsBtnClick">
+						</td>
+					</tr>
+				</table>
+				<table class="table">
+				<tr>
+					<td>
+						<table class="table table-hover" v-for="(n,key) in news" :key = key>
+							<tr>
+								<th class="text-center danger">{{n.title}}({{n.author}})</th>
+							</tr>
+							<tr>
+								<td><a v-bind:href="n.link">{{n.description}}</a></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				</table>
+			</div>
+		</div>
    </div>
 </template>
 
@@ -41,9 +43,30 @@
                 news:[],
                 fd : '레시피'
             }
-        },
+		},
+		methods: {
+		   // 사용자 정의 메소드 
+		   newsBtnClick(){
+                var _this = this;
+				axios.get('http://localhost:3355/news',{
+					params:{
+						fd:_this.fd
+					}
+				}).then(function(result){
+				    _this.news=result.data;
+				})
+		   }
+		},
 		beforeMount(){
-			//console.log('beforeMount')		
+			let _this = this;
+			axios.get('http://localhost:3355/news', {
+				params:{
+					fd: _this.fd
+				}
+			}).then(function(result){
+				console.log(result)
+				_this.news = result.data
+			})
 			
 		}
     

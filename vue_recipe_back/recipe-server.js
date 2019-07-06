@@ -102,17 +102,18 @@ var request=require('request');//<script src="">,import request
 		  }
 	  })
 */
+
 app.get('/news',function(req,res){
-   var query=encodeURIComponent(req.query.fd); //인코딩 
+   var query=encodeURIComponent(req.query.fd);
    // encode => never서버 decode(한글)
    var url="http://newssearch.naver.com/search.naver?where=rss&query="+query;
    var parser=new xml2js.Parser();
    request.get({url:url},function(err,request,xml){
-	   // console.log(xml);
-	   parser.parseString(xml , function(err,pJson){
-		//console.log(pJson)
-		res.send(pJson.rss.channel.item)
-	   });
+	   //console.log(xml);
+	   parser.parseString(xml,function(err,pJson){
+		   //console.log(pJson);
+		   res.json(pJson.rss.channel[0].item);
+	   })
    })
 });
 
