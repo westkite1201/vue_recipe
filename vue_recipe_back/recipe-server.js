@@ -103,6 +103,7 @@ var request=require('request');//<script src="">,import request
 	  })
 */
 
+/* get news ! */
 app.get('/news',function(req,res){
    var query=encodeURIComponent(req.query.fd);
    // encode => never서버 decode(한글)
@@ -117,9 +118,39 @@ app.get('/news',function(req,res){
    })
 });
 
+app.get('/recipe_menu', function(req,res){
+	var data = ["감자", "비빔국수", "떡볶이", "오이냉국", "볶음밥",
+				"감자전", "닭볶음밥", "감자", "김치볶음밥", "백종원"]
+})
 
+app.get('/recommand', function(req, res){
+	let url ="mongodb://211.238.142.181:27017";
+	let data = req.query.fd;
+	Client.connect(url, (err, client)=>{
+		let db = client.db('mydb');
+		db.collection('recipe').find({title:{"$regex":".*"+data}}).limit(100).toArray((err, docs)=>{
+			res.json(docs);
+			client.close();
+		})
+	})
+});
 
+app.get('/chef', (req, res)=>{
+	let page = req.query.page;
+	let rowSize = 50;
+	let skip = ( page * rowSize ) - rowSize;
+	let url = "mongodb://211.238.142.181:27017"
 
+	Client.connect(url, (err, client) =>{
+		// database 설정
+		let db = client.db('mydb')
+		// Data를 읽기 
+		db.collection('chef').find({}).skip(skip).limit(rowSize).toArray((err, docs)=>{
+			res.json(docs);
+			client.close();
+		})
+	})
+})
 
 
 

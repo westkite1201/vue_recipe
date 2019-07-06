@@ -6,6 +6,10 @@
 					<tr>
 						<td>
 							<input type=text size=20 v-model="fd">
+							<!--
+								v-on : 이벤트명 => onClick, onChange
+								@이벤트명 ==> @축약형 이벤트 처리
+							!-->
 							<input type="button" value="검색" @click="newsBtnClick">
 						</td>
 					</tr>

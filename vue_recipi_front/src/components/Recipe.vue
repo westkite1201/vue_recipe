@@ -7,23 +7,14 @@
 				recipe=[{},{},{},{},{},{}...]
 				r={"poster":"http",title:""}
 			-->
-              <div class="col-md-3" v-for="r in recipe" :key=r>
+              <div class="col-md-3" v-for="(r, key) in recipe" :key=key>
 				<div class="thumbnail">
-					<!--"/recipe/6915298"
-						 012345678
-						 substring(r.link.lastIndexOf('/')+1)
-						 Vue (javaScript가 가지고 모든 함수)
-						 ====
-						 1) HTML (화면 UI)
-						 2) js
-						 ==> jsx => javascript+xml
-					-->
 				<a href="#">
 					<img :src="r.poster" alt="Lights" style="width:100%"
-					 		v-on:click="recipeDetail(r.link.substring(8))"
+					 	  v-on:click="recipeDetail(r.link.substring(8))"
 					>
 					<div class="caption">
-					<p>{{r.title.substring(0,15)}}</p>
+						<p>{{r.title.substring(0,15)}}</p>
 					</div>
 				</a>
 				</div>
@@ -90,7 +81,7 @@
 					 <td colspan="3">
 						 <template>
 							 <div>
-								 <template v-for="(value,index) in content">
+								 <template v-for="(value, index) in content" >
 									 <br :key="index">{{value}}
 								 </template>
 							 </div>
@@ -113,7 +104,6 @@ export default {
   },
   data() {
     return {
-        str: "gggg",
 		recipe:[],
 		page:1,
 		total:0,
@@ -190,17 +180,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
-h3
-  margin 40px 0 0
 
-ul
-  list-style-type none
-  padding 0
-
-li
-  display inline-block
-  margin 0 10px
-
-a
-  color #42b983
 </style>

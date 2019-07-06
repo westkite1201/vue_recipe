@@ -2,13 +2,21 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import RecipeHome from './views/RecipeHome'
+import Recommand from './views/Recommand.vue'
 import News from './views/News.vue'
+import Chef from './views/Chef.vue'
+
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: '/chef',
+      name: 'Chef',
+      component: Chef
+    },
     {
       path: '/',
       name: 'home',
@@ -23,6 +31,11 @@ export default new Router({
       path: '/news',
       name: 'News',
       component: News
+    },
+    {
+      path: '/recommand',
+      name: 'Recommand',
+      component: Recommand
     },
 
 
