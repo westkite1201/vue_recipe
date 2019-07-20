@@ -17,6 +17,7 @@
 
 <script>
  import Chef from '@/components/Chef.vue'
+ /* chef view 컴포넌트 */
     export default {
         name: 'chef',
         components: {
@@ -25,19 +26,60 @@
         data(){
             return{
                 page:1,
-                chef_data : []
+                chef_data : [],
+                chef_detail : [],
             }
         },
-        beforeMount:function(){
+        methods:{
+            showPrePage(){
+                this.page=this.page>1?this.page-1:this.page;
                 var _this=this;
                 axios.get('http://localhost:3355/chef',{
                     params:{
                         page:_this.page
                     }
                 }).then(function(result){
-                    _this.chef_data=result.data;
+                    _this.chef_data=result.data
                 })
-        }
+            },
+            showNextPage(){
+            this.page=this.page<20?this.page+1:this.page;
+                var _this=this;
+                axios.get('http://localhost:3355/chef',{
+                    params:{
+                        page:_this.page
+                    }
+                }).then(function(result){
+                    _this.chef_data=result.data
+                })
+            }
+	    },
+        beforeMount:function(){
+                let _this=this;
+                axios.get('http://localhost:3355/chef',{
+                    params:{
+                        page:_this.page
+                    }
+                }).then(function(result){
+                    console.log(result.data)
+                    _this.chef_data = result.data;
+                })
+        },
+        updated:function(){
+          console.log('updated')
+		  let _this = this;
+		//   this.$on('showChefEvent',function(value){
+		// 	  alert("하위 컴포넌트로 부터 받은 값:"+value);
+		// 	  _this.chef_name=value;
+		//   })
+		  axios.get('http://localhost:3355/chef_detail',{
+			  params:{
+				  chef:_this.chef_name
+			  }
+		  }).then(function(result){
+			  _this.chef_detail = result.data
+		  })
+	  }
     }
 </script>
 

@@ -103,54 +103,82 @@ var request=require('request');//<script src="">,import request
 	  })
 */
 
-/* get news ! */
 app.get('/news',function(req,res){
    var query=encodeURIComponent(req.query.fd);
    // encode => never서버 decode(한글)
    var url="http://newssearch.naver.com/search.naver?where=rss&query="+query;
    var parser=new xml2js.Parser();
    request.get({url:url},function(err,request,xml){
-	   //console.log(xml);
+	   console.log(xml);
 	   parser.parseString(xml,function(err,pJson){
 		   //console.log(pJson);
 		   res.json(pJson.rss.channel[0].item);
 	   })
    })
 });
+/*
+	감자 비빔국수 떡볶이 오이냉국 볶음밥
+	감자전 닭볶음탕 김치볶음밥 감자조림 백종원
+*/
+app.get('/recipe_menu',function(req,res){
+  var data=["감자","비빔국수", "떡볶이", "오이냉국",
+			"볶음밥","감자전", "닭볶음탕", "김치볶음밥","감자조림", "백종원"];
+  res.json(data);
+});
 
-app.get('/recipe_menu', function(req,res){
-	var data = ["감자", "비빔국수", "떡볶이", "오이냉국", "볶음밥",
-				"감자전", "닭볶음밥", "감자", "김치볶음밥", "백종원"]
-})
-
-app.get('/recommand', function(req, res){
-	let url ="mongodb://211.238.142.181:27017";
-	let data = req.query.fd;
-	Client.connect(url, (err, client)=>{
-		let db = client.db('mydb');
-		db.collection('recipe').find({title:{"$regex":".*"+data}}).limit(100).toArray((err, docs)=>{
+app.get('/recommand',function(req,res){
+	var url="mongodb://211.238.142.181:27017";
+	var data=req.query.fd;
+	Client.connect(url,(err,client)=>{
+		var db=client.db('mydb');
+		db.collection('recipe').find({title:{"$regex":".*"+data}}).limit(100).toArray(function(err,docs){
 			res.json(docs);
 			client.close();
 		})
 	})
 });
 
-app.get('/chef', (req, res)=>{
-	let page = req.query.page;
-	let rowSize = 50;
-	let skip = ( page * rowSize ) - rowSize;
-	let url = "mongodb://211.238.142.181:27017"
+// chef 읽기 
+app.get('/chef',function(req,res){
+  var page=req.query.page;
+  var rowSize=50;
+  var skip=(page*rowSize)-rowSize;
+  var url="mongodb://211.238.142.181:27017";
+  // 몽고디비 연결 
+  Client.connect(url,(err,client)=>{
+	  // database 설정 
+	  var db=client.db('mydb');
+	  // Data를 읽기
+	  db.collection('chef').find({}).skip(skip).limit(rowSize)
+	  .toArray(function(err,docs){
+		  res.json(docs);
+		  client.close();
+	  })
+  })
+});
+// chef의레시피 => Component로 제작 
+// today 
 
-	Client.connect(url, (err, client) =>{
-		// database 설정
-		let db = client.db('mydb')
-		// Data를 읽기 
-		db.collection('chef').find({}).skip(skip).limit(rowSize).toArray((err, docs)=>{
+app.get('/chef_detail',function(req,res){
+	var chef=req.query.chef;
+	var url="mongodb://211.238.142.181:27017";
+	// 몽고디비 연결 
+	Client.connect(url,(err,client)=>{
+		// database 설정 
+		var db=client.db('mydb');
+		// Data를 읽기
+		db.collection('chef').find({chef:{"$regex" : ".*" + chef}}).limit(100)
+		.toArray(function(err,docs){
 			res.json(docs);
 			client.close();
 		})
 	})
-})
+  })
+  // today 
+  
+  
+
+
 
 
 

@@ -26,22 +26,44 @@
                             <td colspan="4" class="text-right">
                                 <input type='button' 
                                        value='상세보기'
-                                       class='btn btn-sm btn-primary'>
+                                       class='btn btn-sm btn-primary'
+                                       v-on:click="showChef(chef.chef)">
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
         </tbody>
+        <tfoot>
+				<tr>
+					<td class="text-center">
+					    <input type="button" 
+                                value="이전" 
+                                class="btn btn-sm btn-success"
+                                v-on:click="this.$parent.showPrePage">
+						<input type="button" 
+                                value="다음" 
+                                class="btn btn-sm btn-info" 
+                                v-on:click="this.$parent.showNextPage">
+					</td>
+				</tr>
+		</tfoot>
     </table>
 </template>
-
+ 
 <script>
+/*chef 컴포넌트  */
     export default {
         name: 'chef',
           props: {
             chef_data: []
-        }
+        },
+        methods:{
+			showChef:function(value){
+				alert(value);
+                //this.$emit("showChefEvent",value);
+			}
+		}
     }
 </script>
 
